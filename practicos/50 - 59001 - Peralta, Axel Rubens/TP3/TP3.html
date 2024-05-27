@@ -1,290 +1,249 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Control de Depósito</title>
-    <!-- Enlaces a React, ReactDOM y Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Iconos FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Depósito</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        #root {
-            max-width: 1280px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin: 0 auto;
-            padding: 20px;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
         }
-
-        .App {
-            width: 100%;
+        .container {
+            width: 400px;
         }
-
         h1 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 24px;
-            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
         }
-
-        h1 button {
+        .add-button {
+            position: absolute;
+            top: 0;
+            right: 0;
             background: none;
             border: none;
-            font-size: 24px;
             cursor: pointer;
+            font-size: 1.5em;
         }
-
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: flex-start;
-        }
-
-        .product-form {
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .product-form input {
-            flex: 1;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        .product-form button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .product-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
+        .card {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-            width: 240px;
-            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 10px 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-
-        .product-item input {
-            margin: 8px 0;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            width: calc(100% - 16px);
+        .card input {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
-
-        .product-item div {
-            margin: 8px 0;
+        .card .number {
+            font-size: 2em;
+            color: blue;
+            margin-right: 20px;
         }
-
-        .product-item span {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            cursor: pointer;
+        .card .content {
+            flex-grow: 1;
         }
-
-        .product-item i {
-            margin-left: 10px;
+        .card .actions {
+            display: flex;
+            flex-direction: column;
         }
-
-        .product-item button {
-            padding: 8px 16px;
+        .card .actions button {
+            background: none;
             border: none;
-            border-radius: 4px;
-            background-color: #28a745; /* Cambiar a tu color deseado */
-            color: white;
             cursor: pointer;
+            margin: 5px 0;
+        }
+        .card .actions button img {
+            width: 20px;
+            height: 20px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
-
 <body>
-    <div id="root"></div>
-    <script type="text/babel">
-        const { useState } = React;
+    <div class="container">
+        <h1>Control Depósito
+            <button class="add-button" onclick="showAddCard()"><img src="https://img.icons8.com/ios-filled/50/000000/plus.png" alt="add" width="30"></button>
+        </h1>
+        <div class="card hidden" id="newCard">
+            <input type="text" id="newName" placeholder="Nombre"><br>
+            <input type="text" id="newPhone" placeholder="Codigo AEN"><br>
+            <input type="text" id="newNumber" placeholder="Cantidad">
+            <div class="actions">
+                <button onclick="addCard()">Aceptar</button>
+                <button onclick="hideAddCard()">Cancelar</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="number">7</div>
+            <div class="content">
+                <strong>7up</strong><br>
+                7799876543210
+            </div>
+            <div class="actions">
+                <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="number">92</div>
+            <div class="content">
+                <strong>Cola Cola</strong><br>
+                7791234567890
+            </div>
+            <div class="actions">
+                <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="number">5</div>
+            <div class="content">
+                <strong>Fanta</strong><br>
+                7793219876540
+            </div>
+            <div class="actions">
+                <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="number">6</div>
+            <div class="content">
+                <strong>Mirinda</strong><br>
+                7797894561230
+            </div>
+            <div class="actions">
+                <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="number">4</div>
+            <div class="content">
+                <strong>Sprite</strong><br>
+                7796543219870
+            </div>
+            <div class="actions">
+                <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+            </div>
+        </div>
+    </div>
 
-        function App() {
-            const [products, setProducts] = useState([]);
-            const [showForm, setShowForm] = useState(false);
+    <script>
+        function showAddCard() {
+            document.getElementById('newCard').classList.remove('hidden');
+        }
 
-            const addProduct = (name, ean, quantity) => {
-                const existingProduct = products.find(product => product.ean === ean);
-                if (existingProduct) {
-                    setProducts(products.map(product =>
-                        product.ean === ean ? { ...product, quantity: product.quantity + quantity } : product
-                    ));
-                } else {
-                    setProducts([...products, { name, ean, quantity }]);
-                }
-            };
+        function hideAddCard() {
+            document.getElementById('newCard').classList.add('hidden');
+        }
 
-            const editProduct = (ean, updatedProduct) => {
-                setProducts(products.map(product =>
-                    product.ean === ean ? { ...product, ...updatedProduct } : product
-                ));
-            };
+        function addCard() {
+            const name = document.getElementById('newName').value;
+            const phone = document.getElementById('newPhone').value;
+            const number = document.getElementById('newNumber').value;
 
-            const deleteProduct = (ean) => {
-                setProducts(products.filter(product => product.ean !== ean));
-            };
+            if (name && phone && number) {
+                const container = document.querySelector('.container');
+                const newCard = document.createElement('div');
+                newCard.className = 'card';
+                newCard.innerHTML = `
+                    <div class="number">${number}</div>
+                    <div class="content">
+                        <strong>${name}</strong><br>
+                        ${phone}
+                    </div>
+                    <div class="actions">
+                        <button onclick="editCard(this)"><img src="https://img.icons8.com/ios
+                            -glyphs/30/000000/edit.png" alt="edit"></button>
+                        <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+                    </div>
+                `;
+                container.appendChild(newCard);
+                hideAddCard();
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
 
-            return (
-                <div className="App">
-                    <h1>Control Depósito <button onClick={() => setShowForm(!showForm)}><i className="fas fa-plus"></i></button></h1>
-                    {showForm && <ProductForm addProduct={addProduct} />}
-                    <ProductList
-                        products={products}
-                        editProduct={editProduct}
-                        deleteProduct={deleteProduct}
-                    />
+        function editCard(button) {
+            const card = button.closest('.card');
+            const number = card.querySelector('.number').innerText;
+            const name = card.querySelector('.content strong').innerText;
+            const phone = card.querySelector('.content').innerText.split('\n')[1].trim();
+
+            card.innerHTML = `
+                <input type="text" value="${name}" class="editName"><br>
+                <input type="text" value="${phone}" class="editPhone"><br>
+                <input type="text" value="${number}" class="editNumber">
+                <div class="actions">
+                    <button onclick="saveEdit(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/checkmark.png" alt="save"></button>
+                    <button onclick="cancelEdit(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="cancel"></button>
                 </div>
-            );
+            `;
         }
 
-        function ProductForm({ addProduct }) {
-            const [name, setName] = useState('');
-            const [ean, setEan] = useState('');
-            const [quantity, setQuantity] = useState('');
+        function saveEdit(button) {
+            const card = button.closest('.card');
+            const name = card.querySelector('.editName').value;
+            const phone = card.querySelector('.editPhone').value;
+            const number = card.querySelector('.editNumber').value;
 
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (name && ean && quantity) {
-                    addProduct(name, ean, parseInt(quantity));
-                    setName('');
-                    setEan('');
-                    setQuantity('');
-                }
-            };
-
-            return (
-                <form onSubmit={handleSubmit} className="product-form">
-                    <input
-                        type="text"
-                        placeholder="Nombre del producto"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Código EAN"
-                        value={ean}
-                        onChange={(e) => setEan(e.target.value)}
-                    />
-                    <input
-                        type="number"
-                        placeholder="Cantidad"
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
-                    />
-                    <button type="submit">Agregar Producto</button>
-                </form>
-            );
+            if (name && phone && number) {
+                card.innerHTML = `
+                    <div class="number">${number}</div>
+                    <div class="content">
+                        <strong>${name}</strong><br>
+                        ${phone}
+                    </div>
+                    <div class="actions">
+                        <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                        <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
+                    </div>
+                `;
+            } else {
+                alert('Please fill in all fields');
+            }
         }
 
-        function ProductList({ products, editProduct, deleteProduct }) {
-            const sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name));
+        function cancelEdit(button) {
+            const card = button.closest('.card');
+            const number = card.querySelector('.editNumber').value;
+            const name = card.querySelector('.editName').value;
+            const phone = card.querySelector('.editPhone').value;
 
-            return (
-                <div className="product-list">
-                    {sortedProducts.map(product => (
-                        <ProductItem
-                            key={product.ean}
-                            product={product}
-                            editProduct={editProduct}
-                            deleteProduct={deleteProduct}
-                        />
-                    ))}
+            card.innerHTML = `
+                <div class="number">${number}</div>
+                <div class="content">
+                    <strong>${name}</strong><br>
+                    ${phone}
                 </div>
-            );
-        }
-
-        function ProductItem({ product, editProduct, deleteProduct }) {
-            const [isEditing, setIsEditing] = useState(false);
-            const [editName, setEditName] = useState(product.name);
-            const [editEan, setEditEan] = useState(product.ean);
-            const [editQuantity, setEditQuantity] = useState(product.quantity);
-
-            const handleSave = () => {
-                editProduct(product.ean, { name:
-                    editName, ean: editEan, quantity: parseInt(editQuantity) });
-                setIsEditing(false);
-            };
-
-            return (
-                <div className="product-item card">
-                    {isEditing ? (
-                        <>
-                            <input
-                                type="text"
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                value={editEan}
-                                onChange={(e) => setEditEan(e.target.value)}
-                            />
-                            <input
-                                type="number"
-                                value={editQuantity}
-                                onChange={(e) => setEditQuantity(e.target.value)}
-                            />
-                            <div>
-                                <button onClick={handleSave}>Guardar</button>
-                                <button onClick={() => setIsEditing(false)}>Cancelar</button>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <span onClick={() => setIsEditing(true)}>
-                                <i className="fas fa-edit"></i>
-                            </span>
-                            <div>
-                                <strong style={{ fontSize: '32px', color: 'blue' }}>{product.quantity}</strong>
-                            </div>
-                            <div>
-                                <strong>{product.name}</strong>
-                            </div>
-                            <div>{product.ean}</div>
-                            <span onClick={() => deleteProduct(product.ean)}>
-                                <i className="fas fa-trash"></i>
-                            </span>
-                            <button onClick={() => setIsEditing(true)}>Editar</button>
-                        </>
-                    )}
+                <div class="actions">
+                    <button onclick="editCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit.png" alt="edit"></button>
+                    <button onclick="deleteCard(this)"><img src="https://img.icons8.com/ios-glyphs/30/000000/delete.png" alt="delete"></button>
                 </div>
-            );
+            `;
         }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        function deleteCard(button) {
+            button.closest('.card').remove();
+        }
     </script>
 </body>
-
 </html>
